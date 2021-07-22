@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: fdk-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: fdk-dainaClient
+          uri: lb://fdk-dainaClient
+          predicates:
+            - Path=/seller/cityTree,/goods/num/common/list,/num/**,/download/**,/scan/**,/modify/**,/find/**,/goods/find/page
+          filters:
+            - StripPrefix= 0
+        - id: fdk-goods
+          uri: lb://fdk-goods
+          predicates:
+            - Path=/goods/**
+          filters:
+            - StripPrefix= 1
+        - id: summer-user4
+          uri: lb://summer-user4
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix= 1
+server:
+  port: 8762
+# 白名单
+ignore-url:
+  list:
+    - path: "/v2/api-docs"
+    - path: "/swagger-resources"
+    - path: "/doc.html"
+    - path: "/webjars"
+    - path: "/error"
+    - path: "/api/user/user/login"
+    - path: "/api/user/login"
+    - path: "/user/login"
